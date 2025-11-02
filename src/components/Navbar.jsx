@@ -1,0 +1,52 @@
+import React from "react";
+import { useUserStore } from "../store/userStore";
+import { useCartStore } from "../store/cartStore";
+
+function Navbar() {
+  // Read from User Store
+  const { isLoggedIn, firstName } = useUserStore((state) => ({
+    isLoggedIn: state.isLoggedIn,
+    firstName: state.firstName,
+  }));
+
+  // Read from Cart Store
+  const totalItems = useCartStore((state) =>
+    state.cart.reduce((total, item) => total + item.quantity, 0)
+  );
+
+  return (
+    <nav className="flex justify-between items-center p-4 bg-white shadow-md">
+      <h3 className="text-2xl font-bold text-blue-600">My E-Shop</h3>
+      <div className="flex items-center gap-6 text-gray-700">
+        {isLoggedIn ? (
+          <span className="font-medium">Welcome, {firstName}</span>
+        ) : (
+          <span className="font-medium">Welcome, Guest</span>
+        )}
+        <div className="relative flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+            />
+          </svg>
+          {totalItems > 0 && (
+            <span className="absolute -top-2 -right-3 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+              {totalItems}
+            </span>
+          )}
+        </div>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
